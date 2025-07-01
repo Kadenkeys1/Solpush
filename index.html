@@ -24,6 +24,7 @@
 
   <script>
     let provider = null;
+    const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
 
     const getProvider = () => {
       if ("solana" in window) {
