@@ -2,9 +2,69 @@
 <html>
 <head>
   <title>Solpush Meme Coin Launcher</title>
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; text-align: center; }
+    input, button { margin: 0.5rem; padding: 0.5rem; font-size: 1rem; }
+    #walletAddress { margin-top: 1rem; font-weight: bold; }
+  </style>
 </head>
 <body>
-  <h1>Welcome to Solpush Meme Coin Launcher!</h1>
-  <p>Coming soon: Launch your own meme coins on Solana.</p>
+  <h1>Solpush Meme Coin Launcher</h1>
+
+  <button id="connectButton">Connect Wallet</button>
+  <p id="walletAddress"></p>
+
+  <h2>Create Your Meme Coin</h2>
+  <input type="text" id="tokenName" placeholder="Token Name" /><br />
+  <input type="text" id="tokenSymbol" placeholder="Token Symbol" /><br />
+  <input type="number" id="tokenSupply" placeholder="Total Supply" /><br />
+  <button id="createToken">Create Meme Coin</button>
+  <p id="status"></p>
+
+  <script>
+    let provider = null;
+
+    const getProvider = () => {
+      if ("solana" in window) {
+        const provider = window.solana;
+        if (provider.isPhantom) {
+          return provider;
+        }
+      }
+      window.open("https://phantom.app/", "_blank");
+    };
+
+    const connectWallet = async () => {
+      provider = getProvider();
+      if (provider) {
+        try {
+          const resp = await provider.connect();
+          document.getElementById("walletAddress").innerText = "Wallet: " + resp.publicKey.toString();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+
+    const createToken = async () => {
+      if (!provider) {
+        alert("Connect your wallet first!");
+        return;
+      }
+      const name = document.getElementById("tokenName").value;
+      const symbol = document.getElementById("tokenSymbol").value;
+      const supply = document.getElementById("tokenSupply").value;
+      if (!name  !symbol  !supply) {
+        alert("Please fill in all fields.");
+        return;
+      }
+      document.getElementById("status").innerText = "This is where minting will happen (coming next!)";
+      // Next step: add token mint logic here
+    };
+
+    document.getElementById("connectButton").addEventListener("click", connectWallet);
+    document.getElementById("createToken").addEventListener("click", createToken);
+  </script>
 </body>
 </html>
